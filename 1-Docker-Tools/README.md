@@ -1,8 +1,8 @@
 # Compose
 
 ## Anforderungen:
-[Docker 1.6+](https://docs.docker.com/installation)
-[Docker-Compose](https://docs.docker.com/compose/install)
+* [Docker 1.6+](https://docs.docker.com/installation)
+* [Docker-Compose](https://docs.docker.com/compose/install)
 
 ## Beispiel
 Um das Beispiel lokal zu starten, muss sich der Anwender in dem Ordner mit diesem Beispiel
@@ -31,9 +31,9 @@ curl $(sudo docker-compose port --index=1 todoApp 9090)
 
 # Swarm
 ## Anforderungen
-[Docker 1.6+](https://docs.docker.com/installation)
-[Docker-Machine](https://docs.docker.com/machine/install-machine) 
-[Virtualbox](https://www.virtualbox.org)
+* [Docker 1.6+](https://docs.docker.com/installation)
+* [Docker-Machine](https://docs.docker.com/machine/install-machine) 
+* [Virtualbox](https://www.virtualbox.org)
 
 ## Erstellung des Swarm-Clusters mit Docker-Machine
 ```Bash

@@ -1,8 +1,8 @@
 # Fleet example
 
 ## Anforderungen
-[Vagrant](https://www.vagrantup.com/downloads.html) 1.6+
-[Virtualbox](https://www.virtualbox.org) 4.3.10+
+* [Vagrant](https://www.vagrantup.com/downloads.html) 1.6+
+* [Virtualbox](https://www.virtualbox.org) 4.3.10+
 
 Ein laufendes CoreOS Cluster mit mindestens 3 Knoten. Es kann das offizielle CoreOS vagrant Setup von [Github](https://github.com/coreos/coreos-vagrant) verwendet werden.
 
@@ -46,7 +46,7 @@ Mit dem Kommando
 kann sich der Admin alle verfügbaren Knoten in dem fleet Cluster
 anzeigen lassen. Nun können die Beispiel-Dateien geladen werden 
 ```Bash
-"git clone https://github.com/inovex/docker-orchestration.git && cd docker-orchestration/2-fleet".
+git clone https://github.com/inovex/docker-orchestration.git && cd docker-orchestration/2-fleet
 ```
 Nun können wir den Redis-Master und den Sicde-Kick starten:
 ```Bash
@@ -65,8 +65,9 @@ fleetctl submit redis-slave\@.service
 fleetctl start redis-slave\@{1,2}
 fleetctl submit redis-slave-discovery\@.service
 fleetctl start redis-slave-discovery\@{1,2}
-
+```
 Nun können die Einheiten wieder überprüft werden.
+```Bash
 fleetctl list-units
 ```
 
@@ -82,6 +83,7 @@ Nun können wir mit den ToDo Services interagieren
 ```Bash
 curl $(etcdctl get /services/db/todo-app@1/host):$(etcdctl get /services/db/todo-app@1/port)
 curl $(etcdctl get /services/db/todo-app@2/host):$(etcdctl get /services/db/todo-app@2/port)/?todo=duschen -X PUT
-curl $(etcdctl get /services/db/todo-app@1/host):$(etcdctl get /services/db/todo-app@1/port)/?todo=duschen -X DELETE
-curl $(etcdctl get /services/db/todo-app@2/host):$(etcdctl get /services/db/todo-app@2/port)
+curl $(etcdctl get /services/db/todo-app@1/host):$(etcdctl get /services/db/todo-app@1/port)
+curl $(etcdctl get /services/db/todo-app@2/host):$(etcdctl get /services/db/todo-app@2/port)/?todo=duschen -X DELETE
+curl $(etcdctl get /services/db/todo-app@1/host):$(etcdctl get /services/db/todo-app@1/port)
 ```

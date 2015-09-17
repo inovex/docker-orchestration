@@ -1,8 +1,8 @@
 # Kubernetes example
 
 ## Anforderungen
-[Vagrant 1.6.2+](https://www.vagrantup.com/downloads.html)
-[Virtualbox 4.3.28](https://www.virtualbox.org/wiki/Download_Old_Builds_4_3)
+* [Vagrant 1.6.2+](https://www.vagrantup.com/downloads.html)
+* [Virtualbox 4.3.28](https://www.virtualbox.org/wiki/Download_Old_Builds_4_3)
 
 Für das Beispiel wird ein laufends Kubernetes Cluster benötigt, hierbei kann das Vagrant Beispiel von dem offiziellen [Github repo](https://github.com/kubernetes/kubernetes/blob/v1.0.1/docs/getting-started-guides/vagrant.md) verwendet werden.
 
