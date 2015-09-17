@@ -45,8 +45,9 @@ Mit dem Kommando
 
 kann sich der Admin alle verfügbaren Knoten in dem fleet Cluster
 anzeigen lassen. Nun können die Beispiel-Dateien geladen werden 
-"git clone https://gitlab.inovex.de/jscheuermann/docker-orchestration.git && cd docker-orchestration/2-fleet".
-
+```Bash
+"git clone https://github.com/inovex/docker-orchestration.git && cd docker-orchestration/2-fleet".
+```
 Nun können wir den Redis-Master und den Sicde-Kick starten:
 ```Bash
 fleetctl start redis-master.service
