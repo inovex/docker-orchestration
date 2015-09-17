@@ -1,0 +1,15 @@
+[Unit]
+Description=ToDo App
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill todo-app
+ExecStartPre=-/usr/bin/docker rm todo-app
+ExecStartPre=/usr/bin/docker pull johscheuer/todo-app:v1
+ExecStart=/bin/sh -c "/usr/bin/docker run --name todo-app -e REDISMASTER_PORT_6379_TCP_ADDR=$(/usr/bin/etcdctl get /services/db/redis-master/host) -e REDISMASTER_PORT_6379_TCP_PORT=$(/usr/bin/etcdctl get /services/db/redis-master/port) -e REDISSLAVE_PORT_6379_TCP_ADDR=$(/usr/bin/etcdctl get /services/db/redis-slave@%i/host) -e REDISSLAVE_PORT_6379_TCP_PORT=$(/usr/bin/etcdctl get /services/db/redis-slave@%i/port) -p 9090:9090 johscheuer/todo-app:v1"
+ExecStop=/usr/bin/docker stop todo-app
+
+[X-Fleet]
+Conflicts=todo-app@*.service

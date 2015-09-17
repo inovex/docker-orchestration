@@ -1,0 +1,11 @@
+[Unit]
+Description=Announce Redis Slave
+BindsTo=redis-slave@%i.service
+After=redis-slave@%i.service
+
+[Service]
+ExecStart=/bin/sh -c "while true; do etcdctl set /services/db/redis-slave@%i/host '$(hostname -i)' --ttl 60; etcdctl set /services/db/redis-slave@%i/port '6379' --ttl 60;sleep 45;done"
+ExecStop=/usr/bin/etcdctl rm /services/db/redis-slave@%i
+
+[X-Fleet]
+MachineOf=redis-slave@%i.service

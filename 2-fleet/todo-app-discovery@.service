@@ -1,0 +1,11 @@
+U[nit]
+Description=Announce ToDo App
+BindsTo=todo-app@%i.service
+After=todo-app@%i.service
+
+[Service]
+ExecStart=/bin/sh -c "while true; do etcdctl set /services/db/todo-app@%i/host '$(hostname -i)' --ttl 60; etcdctl set /services/db/todo-app@%i/port '9090' --ttl 60;sleep 45;done"
+ExecStop=/usr/bin/etcdctl rm /services/db/todo-app@%i
+
+[X-Fleet]
+MachineOf=todo-app@%i.service

@@ -1,0 +1,13 @@
+todoApp:
+  image: johscheuer/todo-app:v1
+  links:
+   - redisMaster
+   - redisSlave
+  ports:
+   - "9090"
+redisSlave:
+  image: johscheuer/redis-slave:v1
+  links:
+   - redisMaster
+redisMaster:
+  image: redis

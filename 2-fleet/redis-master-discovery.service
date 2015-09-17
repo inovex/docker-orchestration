@@ -1,0 +1,11 @@
+[Unit]
+Description=Announce Redis Master
+BindsTo=redis-master.service
+After=redis-master.service
+
+[Service]
+ExecStart=/bin/sh -c "while true; do etcdctl set /services/db/redis-master/host '$(hostname -i)' --ttl 60; etcdctl set /services/db/redis-master/port '6379' --ttl 60;sleep 45;done"
+ExecStop=/usr/bin/etcdctl rm /services/db/redis-master
+
+[X-Fleet]
+MachineOf=redis-master.service
