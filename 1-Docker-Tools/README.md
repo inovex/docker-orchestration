@@ -16,22 +16,24 @@ sudo docker-compose ps
 # Ausgabe des Ports der ToDo Anwendung 
 sudo docker-compose port todoApp 9090
 
+# Mit einem einfachen curl kann getestet werden ob alles korrekt gestartet wurde
+curl $(sudo docker-compose port todoApp 9090)
+
 # Erstelle zwei neue ToDo Container
 sudo docker-compose scale todoApp=3
 
 # Nun kann gegen die drei Instanzen ein curl durchgeführt werden
-curl -PUT $(docker-compose port --index=1 todoApp 9090)/?todo=duschen
-curl $(docker-compose port --index=2 todoApp 9090)
-curl -DELETE $(docker-compose port --index=3 todoApp 9090)/?todo=duschen
-curl $(docker-compose port --index=1 todoApp 9090)
+curl -X PUT $(sudo docker-compose port --index=1 todoApp 9090)/?todo=duschen
+curl $(sudo docker-compose port --index=2 todoApp 9090)
+curl -X DELETE $(sudo docker-compose port --index=3 todoApp 9090)/?todo=duschen
+curl $(sudo docker-compose port --index=1 todoApp 9090)
 ```
 
 # Swarm
 ## Anforderungen
-Docker 1.6+
-Docker-Machine 
-Virtualbox
-%TODO LINK
+[Docker 1.6+](https://docs.docker.com/installation)
+[Docker-Machine](https://docs.docker.com/machine/install-machine) 
+[Virtualbox](https://www.virtualbox.org)
 
 ## Erstellung des Swarm-Clusters mit Docker-Machine
 ```Bash
