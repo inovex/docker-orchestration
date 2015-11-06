@@ -17,6 +17,7 @@
       ],
       "selector":{
          "name":"todo-app"
-      }
+      },         
+      "type": "NodePort"
    }
 }
