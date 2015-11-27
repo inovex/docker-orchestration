@@ -1,5 +1,5 @@
 todoApp:
-  image: johscheuer/todo-app-web:k8s
+  image: johscheuer/todo-app-web:v1
   ports:
    - "3000"
   net: todoapp_network
