@@ -208,7 +208,14 @@ Es ist zu beachten, dass es in dem Swarm Cluster nur ein Container mit einem ein
 docker run -d -p 6379:6379 --name=redis-slave --net=todoapp_network johscheuer/redis-slave:v1
 ```
 
-## COMPOSE + SWARM + Networking
+## Compse + Swarm + Networking
+Wird können nun das Compose Beispiel auch auf dem Swarm Cluster starten. Hierfür entfernen wir die zuvor gestarteten Container.
+
+```Bash
+docker rm -f $(docker ps -q)
+```
+
+Nun können wir mit dem gewohnten Docker Compose Commando unsere Anwendung starten
 
 ```Bash
 docker-compose up -d
