@@ -2,7 +2,7 @@
    "kind":"Service",
    "apiVersion":"v1",
    "metadata":{
-      "name":"todoapp",
+      "name":"todo-app",
       "labels":{
          "name":"todo-app"
       }
@@ -10,14 +10,14 @@
    "spec":{
       "ports": [
         {
-          "port":9090,
-          "targetPort":9090,
+          "port":80,
+          "targetPort":3000,
           "protocol":"TCP"
         }
       ],
       "selector":{
          "name":"todo-app"
-      },         
+      },
       "type": "NodePort"
    }
 }
