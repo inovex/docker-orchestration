@@ -94,18 +94,12 @@ Nun können wir den aktuellen Status des Clusters verifizieren. Die Endpoints si
 ./cluster/kubectl.sh get endpoints
 ```
 
-Nun benötigen wir den nodePort, dies ist der Port, der auf allen Kubernetes nodes geöffnet wurde und auf die Todo App verweist.
-
-```Bash
-./cluster/kubectl.sh get svc todo-app -o json | grep nodePort
-```
-
-Mit diesem Port können wir mit dem Cluster nun interagieren z.B. verwenden wir Node 1 (10.245.1.3) mit den nodePort 30505 (dieser ist bei allen Nodes gleich). Wenn wir nun in den Browser 10.245.1.3:30505 eingeben sehen wir unsere Todo App.
+Da wir den Service als Typ "ClusterIP" gestartet haben, können wir diesen über den Kubernetes Master aufrufen. Dieser führt dann einen transparente Weiterleitung zu den entsprechenden Pods durch: [https://10.245.1.2/api/v1/proxy/namespaces/default/services/todo-app/](https://10.245.1.2/api/v1/proxy/namespaces/default/services/todo-app/) bei dem Zugriff muss dem selbst erstellten Zertifikat vertraut werden. Die anschließende Anmeldung erfolgt mit dem Benutzer vagrant und dem Passwort vagrant.
 
 Damit man sich davon überzeugen kann, dass der Service die Anfragen auch auf die unterschiedlichen Pods verteilt besitzt die Todo App eine kleine Schnittstelle welche die IP Adresse ausgibt:
 
 ```Bash
-watch -n 1 curl -s http://10.245.1.3:30505/whoami
+watch -n 1 curl -s -k -u vagrant:vagrant https://10.245.1.2/api/v1/proxy/namespaces/default/services/todo-app/whoami
 ```
 
 ### Scale down
