@@ -3,6 +3,7 @@
 ### Anforderungen:
 - [Docker 1.9+](https://docs.docker.com/installation)
 - [Docker-Compose 1.5.1+](https://docs.docker.com/compose/install)
+- Kernel 3.16+
 
 ### Beispiel
 Um das Beispiel lokal zu starten, muss sich der Anwender in dem Ordner mit diesem Beispiel befinden.
