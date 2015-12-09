@@ -2,7 +2,7 @@
    "kind":"Service",
    "apiVersion":"v1",
    "metadata":{
-      "name":"redisslave",
+      "name":"redis-slave",
       "labels":{
          "name":"redis-slave"
       }

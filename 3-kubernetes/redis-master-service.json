@@ -2,7 +2,7 @@
    "kind":"Service",
    "apiVersion":"v1",
    "metadata":{
-      "name":"redismaster",
+      "name":"redis-master",
       "labels":{
          "name":"redis-master"
       }

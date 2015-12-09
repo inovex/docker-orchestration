@@ -3,13 +3,13 @@
 - [Vagrant 1.6.2+](https://www.vagrantup.com/downloads.html)
 - [Virtualbox 4.3.28+](https://www.virtualbox.org/wiki/Download_Old_Builds_4_3)
 
-Für das Beispiel wird ein laufends Kubernetes Cluster benötigt, hierbei kann das Vagrant Beispiel von dem offiziellen [Github repo](https://github.com/kubernetes/kubernetes/blob/v1.0.7/docs/getting-started-guides/vagrant.md) verwendet werden.
+Für das Beispiel wird ein laufends Kubernetes Cluster benötigt, hierbei kann das Vagrant Beispiel von dem offiziellen [Github repo](https://github.com/kubernetes/kubernetes/blob/v1.1.1/docs/getting-started-guides/vagrant.md) verwendet werden.
 
 Starten des Clusters
 
 ```Bash
 # Zu erst laden wir die fertig gebauten Binaries von kubernetes
-wget https://github.com/GoogleCloudPlatform/kubernetes/releases/download/v1.0.7/kubernetes.tar.gz
+wget https://github.com/GoogleCloudPlatform/kubernetes/releases/download/v1.1.1/kubernetes.tar.gz
 # Danach führen wir folgende Befehle aus um das Cluster zu starten:
 tar xfz kubernetes.tar.gz
 cd kubernetes
@@ -94,23 +94,16 @@ Nun können wir den aktuellen Status des Clusters verifizieren. Die Endpoints si
 ./cluster/kubectl.sh get endpoints
 ```
 
-Nun benötigen wir den nodePort, dies ist der Port, der auf allen Kubernetes nodes geöffnet wurde und auf die TodoApp verweist.
+Da wir den Service als Typ "ClusterIP" gestartet haben, können wir diesen über den Kubernetes Master aufrufen. Dieser führt dann einen transparente Weiterleitung zu den entsprechenden Pods durch: [https://10.245.1.2/api/v1/proxy/namespaces/default/services/todo-app/](https://10.245.1.2/api/v1/proxy/namespaces/default/services/todo-app/) bei dem Zugriff muss dem selbst erstellten Zertifikat vertraut werden. Die anschließende Anmeldung erfolgt mit dem Benutzer vagrant und dem Passwort vagrant.
+
+Damit man sich davon überzeugen kann, dass der Service die Anfragen auch auf die unterschiedlichen Pods verteilt besitzt die Todo App eine kleine Schnittstelle welche die IP Adresse ausgibt:
 
 ```Bash
-./cluster/kubectl.sh get svc todoapp -o json | grep nodePort
-```
-
-Mit diesem Port können wir mit dem Cluster nun interagieren z.B. verwenden wir Node 1 (10.245.1.3) mit den nodePort 30505 (dieser ist bei allen Nodes gleich).
-
-```Bash
-curl -X PUT 10.245.1.3:30505/?todo=duschen
-curl -X GET 10.245.1.4:30505
-curl -X DELETE 10.245.1.5:30505/?todo=duschen
-curl -X GET 10.245.1.3:30505
+watch -n 1 curl -s -k -u vagrant:vagrant https://10.245.1.2/api/v1/proxy/namespaces/default/services/todo-app/whoami
 ```
 
 ### Scale down
-Wir können nun die Anzahl der TodoApp pods auf 1 reduzieren, da wir z.B. aktuell wenig Verkehr auf unserer Website haben. Das Beispiel von oben mit dem Erstellen und Löschen eines Eintrags funktioniert nun weiterhin ob wohl der Pod nur auf einem Node im Cluster läuft, ist dieser von überall erreichbar.
+Wir können nun die Anzahl der Todo App pods auf 1 reduzieren, da wir z.B. aktuell wenig Verkehr auf unserer Website haben. Das Beispiel von oben mit dem Erstellen und Löschen eines Eintrags funktioniert nun weiterhin ob wohl der Pod nur auf einem Node im Cluster läuft, ist dieser von überall erreichbar.
 
 ```Bash
 ./cluster/kubectl.sh scale --replicas=1 rc todo-app
