@@ -39,11 +39,11 @@ $(document).ready(function() {
   $("#todo-submit").click(handleSubmission);
   $("#todo-delete").click(handleDeletion);
 
-  // Poll every second.
+  // Poll every 10 seconds.
   (function fetchTodos() {
     $.getJSON("read/todo").done(appendTodoList).always(
       function() {
-        setTimeout(fetchTodos, 1000);
+        setTimeout(fetchTodos, 10000);
       });
   })();
 });
