@@ -191,7 +191,7 @@ Die Erstellung des Redis-Master Containers
 docker run -d -p 6379:6379 --name=redis-master --net=todoapp_network redis
 ```
 
-Nun können wir die zwei Redis-Slaves erstellen
+Nun können wir den Redis-Slave erstellen
 
 ```Bash
 docker run -d -p 6379:6379 --name=redis-slave --net=todoapp_network johscheuer/redis-slave:v1
@@ -212,7 +212,7 @@ docker run -d -p 6379:6379 --name=redis-slave --net=todoapp_network johscheuer/r
 ```
 
 ## Compse + Swarm + Networking
-Wird können nun das Compose Beispiel auch auf dem Swarm Cluster starten. Hierfür entfernen wir die zuvor gestarteten Container.
+Wir können nun das Compose Beispiel auch auf dem Swarm Cluster starten. Hierfür entfernen wir die zuvor gestarteten Container.
 
 ```Bash
 docker rm -f $(docker ps -q)
