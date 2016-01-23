@@ -5,13 +5,26 @@
 - [Docker-Compose 1.5.1+](https://docs.docker.com/compose/install)
 - Kernel 3.16+
 
+### Installation Docker-Machine (Linux)
+
+```Bash
+# Zuerst zu dem user root wechseln
+su
+curl -L https://github.com/docker/compose/releases/download/1.5.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose && \
+  chmod +x /usr/local/bin/docker-compose
+exit
+# Test ob docker-compose korrekt installiert wurde
+docker-compose version
+```
+
 ### Beispiel
 Um das Beispiel lokal zu starten, muss sich der Anwender in dem Ordner mit diesem Beispiel befinden.
 
 Im ersten Schritt erstellen wir das benötigte Netzwerk und starten danach die Container.
 
 ```Bash
-sudo docker network create --driver=bridge todoapp_network
+sudo docker network create todoapp_network
 sudo docker-compose up -d
 ```
 
@@ -63,7 +76,7 @@ docker-machine start default
 Im nächsten Schritt erstellen wir das benötigte Netzwerk und starten danach die Container.
 
 ```Bash
-docker network create --driver=bridge todoapp_network
+docker network create todoapp_network
 docker-compose up -d
 ```
 
@@ -112,6 +125,18 @@ docker-compose port --index=3 todoApp 3000
 
 oder
 - [Docker Toolbox](https://www.docker.com/docker-toolbox)
+
+## Installation Docker-Machine (Linux)
+
+```Bash
+# Zuerst zu dem user root wechseln
+su
+curl -L https://github.com/docker/machine/releases/download/v0.5.6/docker-machine_linux-amd64 >/usr/local/bin/docker-machine && \
+  chmod +x /usr/local/bin/docker-machine
+exit
+# Test ob docker-machine korrekt installiert wurde
+docker-machine version
+```
 
 ## Vorkonfiguration
 
@@ -173,7 +198,7 @@ docker info
 Nun erstellen wir abschließend noch ein Overlay Netzwerk, so dass die Hosts auch miteinander kommunizieren können.
 
 ```Bash
-docker $(docker-machine config swarm-master) network create --driver=overlay todoapp_network
+docker network create todoapp_network
 docker $(docker-machine config swarm-master) network ls
 ```
 

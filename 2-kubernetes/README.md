@@ -3,13 +3,13 @@
 - [Vagrant 1.6.2+](https://www.vagrantup.com/downloads.html)
 - [Virtualbox 4.3.28+](https://www.virtualbox.org/wiki/Download_Old_Builds_4_3)
 
-Für das Beispiel wird ein laufends Kubernetes Cluster benötigt, hierbei kann das Vagrant Beispiel von dem offiziellen [Github repo](https://github.com/kubernetes/kubernetes/blob/v1.1.1/docs/getting-started-guides/vagrant.md) verwendet werden.
+Für das Beispiel wird ein laufends Kubernetes Cluster benötigt, hierbei kann das Vagrant Beispiel von dem offiziellen [Github repo](https://github.com/kubernetes/kubernetes/blob/v1.1.4/docs/getting-started-guides/vagrant.md) verwendet werden.
 
 Starten des Clusters
 
 ```Bash
 # Zu erst laden wir die fertig gebauten Binaries von kubernetes
-wget https://github.com/kubernetes/kubernetes/releases/download/v1.1.1/kubernetes.tar.gz
+wget https://github.com/kubernetes/kubernetes/releases/download/v1.1.4/kubernetes.tar.gz
 # Danach führen wir folgende Befehle aus um das Cluster zu starten:
 tar xfz kubernetes.tar.gz
 cd kubernetes
