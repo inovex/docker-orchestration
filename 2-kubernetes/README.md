@@ -9,7 +9,7 @@ Starten des Clusters
 
 ```Bash
 # Zu erst laden wir die fertig gebauten Binaries von kubernetes
-wget https://github.com/GoogleCloudPlatform/kubernetes/releases/download/v1.1.1/kubernetes.tar.gz
+wget https://github.com/kubernetes/kubernetes/releases/download/v1.1.1/kubernetes.tar.gz
 # Danach führen wir folgende Befehle aus um das Cluster zu starten:
 tar xfz kubernetes.tar.gz
 cd kubernetes
@@ -117,7 +117,7 @@ Wenn wir nun wieder mehr Resourcen benötigen, können wir einfach wieder neue P
 ```
 
 ### Ausblick: Horizontal pod autoscaling
-Mit der Version 1.1.1 von Kubernetes kommt das (beta) feature [horizontal-pod-autoscaling](https://github.com/kubernetes/kubernetes/tree/v1.1.1-beta.1/docs/user-guide/horizontal-pod-autoscaling) welches das dynamische Skalieren der Pods im Cluster erlaubt.
+Mit der Version 1.1.1 von Kubernetes kommt das (beta) Feature [horizontal-pod-autoscaling](https://github.com/kubernetes/kubernetes/tree/v1.1.1-beta.1/docs/user-guide/horizontal-pod-autoscaling) welches das dynamische Skalieren der Pods im Cluster erlaubt.
 
 ## Hinweise
 Bei der Verwendung eines public Cloud Providers wie z.B. GCE oder AWS kann der Service automatisch einen öffentlich erreichbaren Loadbalancer erstellen.
