@@ -19,6 +19,7 @@ Zeige alle Container an
 
 ```Bash
 sudo docker-compose ps
+sudo docker network inspect todoapp_network
 ```
 
 Ausgabe des Ports der ToDo Anwendung
@@ -70,6 +71,7 @@ Zeige alle Container an
 
 ```Bash
 docker-compose ps
+docker network inspect todoapp_network
 ```
 
 Ausgabe des Ports der ToDo Anwendung
