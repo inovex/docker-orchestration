@@ -159,7 +159,6 @@ docker-machine create \
     --driver virtualbox \
     --swarm \
     --swarm-master \
-    --virtualbox-memory 2048 \
     --swarm-discovery="consul://$(docker-machine ip cluster-store):8500" \
     --engine-opt="cluster-store=consul://$(docker-machine ip cluster-store):8500" \
     --engine-opt="cluster-advertise=eth1:0" \
@@ -171,7 +170,6 @@ Erstellung von zwei Swarm-Nodes
 ```Bash
 docker-machine create \
     --driver virtualbox \
-    --virtualbox-memory 2048 \
     --swarm \
     --swarm-discovery="consul://$(docker-machine ip cluster-store):8500" \
     --engine-opt="cluster-store=consul://$(docker-machine ip cluster-store):8500" \
@@ -180,7 +178,6 @@ docker-machine create \
 
 docker-machine create \
     --driver virtualbox \
-    --virtualbox-memory 2048 \
     --swarm \
     --swarm-discovery="consul://$(docker-machine ip cluster-store):8500" \
     --engine-opt="cluster-store=consul://$(docker-machine ip cluster-store):8500" \
