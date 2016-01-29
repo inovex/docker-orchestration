@@ -117,6 +117,54 @@ docker-compose port --index=2 todoApp 3000
 docker-compose port --index=3 todoApp 3000
 ```
 
+## Compose v2
+- [Docker 1.10+](https://docs.docker.com/installation)
+- [Docker-Compose 1.6+](https://docs.docker.com/compose/install)
+- Kernel 3.16+
+
+### Beispiel
+Um das Beispiel lokal zu starten, muss sich der Anwender in dem Ordner mit diesem Beispiel befinden.
+
+Im ersten Schritt starten wir alle Container.
+
+```Bash
+sudo docker-compose -f docker-compose_v2.yml up -d
+```
+
+Zeige alle Container an
+
+```Bash
+sudo docker-compose -f docker-compose_v2.yml ps
+sudo docker network inspect todoapp_network
+```
+
+Ausgabe des Ports der ToDo Anwendung
+
+```Bash
+sudo docker-compose -f docker-compose_v2.yml port todoApp 3000
+0.0.0.0:32768
+```
+
+Wir können diesen Port einfach verwenden und in einem beliebigen Browser localhost:32768 eingeben.
+
+Jetzt können wir einen neuen Redis Slave Container erstellen
+
+```Bash
+sudo docker-compose -f docker-compose_v2.yml scale redis-slave=2
+```
+
+Nun können wir in einem neuen Terminalfenster, mithilfe von watch, alle 500ms von dem frontend Container eine DNS Anfrage auf den Redis Slave ausführen.
+
+```Bash
+watch -n 0.5 sudo docker exec $(sudo docker ps -f name=1_docker_tools_todoApp_1 -q) getent hosts  redis-slave
+```
+
+Im nächsten Schritt können wir den ersten Redis Slave beenden. Wenn wir nun wieder in das Terminalfenster der DNS Abfrage schauen sehen wir die IP-Addresse des Redis Slave 2.
+
+```Bash
+sudo docker kill $(sudo docker ps -f name=1_docker_tools_redis-slave_1 -q)
+```
+
 # Swarm
 ## Anforderungen
 - [Docker 1.9+](https://docs.docker.com/installation)
