@@ -14,7 +14,7 @@ wget https://github.com/kubernetes/kubernetes/releases/download/v1.1.7/kubernete
 tar xfz kubernetes.tar.gz
 cd kubernetes
 export KUBERNETES_PROVIDER=vagrant
-export NUM_MINIONS=3
+export NUM_NODES=3
 export KUBERNETES_MEMORY=1024 #Hier kann der Arbeitsspeicher eines Knotens angepasst werden
 ./cluster/kube-up.sh
 ```
