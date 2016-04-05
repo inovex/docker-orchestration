@@ -1,5 +1,2 @@
-#!/bin/bash
-
-echo "Start redis slave redis-master 6379"
-
+#!/bin/sh
 redis-server --slaveof redis-master 6379
