@@ -173,7 +173,7 @@ docker-machine ls --filter name=swarm-*
 
 ### Initialisierung von Swarm
 
-At first we need to make the node `swarm-manager` the manager of the swarm cluster with the following command:
+Zu erst müssen wir den Knoten `swarm-manager` mit dem folgenden Befehl zum Swarm manager für das neue Cluster ernennen.
 
 ```bash
 $ docker-machine ssh swarm-manager docker swarm init --advertise-addr $(docker-machine ip swarm-manager):2377
@@ -191,7 +191,7 @@ To add a manager to this swarm, run the following command:
     192.168.99.100:2377
 ```
 
-In the next step the nodes `swarm-node-00` and `swarm-node-01` will join the swarm cluster, just take your token from the command above:
+Im nächsten Schritt fügen wir die beiden Knoten `swarm-node-00` und `swarm-node-01` dem CLuster hinzu, adzu wird der Token von dem vorherigen Kommando benötigt:
 
 ```bash
 docker-machine ssh swarm-node-00 docker swarm join \
