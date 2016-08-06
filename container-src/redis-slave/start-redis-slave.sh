@@ -1,2 +1,2 @@
 #!/bin/sh
-redis-server --slaveof redis-master 6379
+redis-server --protected-mode no --slaveof redis-master 6379
