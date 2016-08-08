@@ -1,22 +1,14 @@
 # Compose
 
-## Linux
+## Anforderungen:
 
-### Anforderungen:
+### Linux
 
 - [Docker 1.10+](https://docs.docker.com/installation)
 - [Docker-Compose 1.8+](https://docs.docker.com/compose/install)
 - Kernel 3.16+
 
-#### OSX / MacOS
-
-- [Docker for Mac](https://docs.docker.com/docker-for-mac)
-
-#### Windows
-
-- [Docker for Windows](https://docs.docker.com/docker-for-windows)
-
-### Installation Docker-Compose (Linux)
+#### Installation Docker-Compose (Linux)
 
 ```bash
 # Zuerst zu dem user root wechseln
@@ -28,18 +20,26 @@ exit
 docker-compose version
 ```
 
-### Beispiel
+### OSX / MacOS
+
+- [Docker for Mac](https://docs.docker.com/docker-for-mac)
+
+### Windows
+
+- [Docker for Windows](https://docs.docker.com/docker-for-windows)
+
+## Beispiel
 
 Um das Beispiel lokal zu starten, muss sich der Anwender in dem Ordner mit diesem Beispiel befinden.
 
-Im ersten Schritt erstellen wir das benötigte Netzwerk und starten danach die Container.
+Im ersten Schritt erstellen wir das Netzwerk (das könnte Compose auch für uns tun) und starten alle Container.
 
 ```bash
 sudo docker network create todoapp_network
 sudo docker-compose up -d
 ```
 
-Zeige alle Container an
+Nun können wir uns alle Container anzeigen lassen
 
 ```bash
 sudo docker-compose ps
@@ -55,7 +55,19 @@ sudo docker-compose port todoApp 3000
 
 Wir können diesen Port einfach verwenden und in einem beliebigen Browser localhost:32768 eingeben.
 
-Jetzt können wir zwei neue ToDo Container erstellen
+Jetzt können wir einen neuen Redis Slave Container erstellen
+
+```bash
+sudo docker-compose scale redis-slave=2
+```
+
+Nun können wir in einem neuen Terminalfenster, mithilfe von watch, alle 500ms von dem frontend Container eine DNS Anfrage auf den Redis Slave ausführen und sehen, dass die Anfragen auf die unterschiedlichen Redis-Slave Container verteilt werden.
+
+```bash
+watch -n 0.5 sudo docker exec $(sudo docker ps -f name=1dockertools_todoApp_1 -q) getent hosts  redis-slave
+```
+
+Wir könenn natürlich auch die Frontend Container skalieren lassen:
 
 ```bash
 sudo docker-compose scale todoApp=3
@@ -69,54 +81,157 @@ sudo docker-compose port --index=2 todoApp 3000
 sudo docker-compose port --index=3 todoApp 3000
 ```
 
-## Compose v2
+# Swarm
 
-- [Docker 1.10+](https://docs.docker.com/installation)
-- [Docker-Compose 1.8+](https://docs.docker.com/compose/install)
-- Kernel 3.16+
+## Anforderungen
 
-### Beispiel
+- [Docker 1.9+](https://docs.docker.com/installation)
+- [Docker-Machine](https://docs.docker.com/machine/install-machine)
+- [Virtualbox](https://www.virtualbox.org)
 
-Um das Beispiel lokal zu starten, muss sich der Anwender in dem Ordner mit diesem Beispiel befinden.
+oder
 
-Im ersten Schritt starten wir alle Container.
+- [Docker Toolbox](https://www.docker.com/docker-toolbox)
+
+## Installation Docker-Machine (Linux)
 
 ```bash
-sudo docker-compose -f docker-compose_v2.yml up -d
+# Zuerst zu dem user root wechseln
+su
+curl -L https://github.com/docker/machine/releases/download/v0.8.0/docker-machine_linux-amd64 >/usr/local/bin/docker-machine && \
+  chmod +x /usr/local/bin/docker-machine
+exit
+# Test ob docker-machine korrekt installiert wurde
+docker-machine version
 ```
 
-Zeige alle Container an
+## Vorkonfiguration
 
 ```bash
-sudo docker-compose -f docker-compose_v2.yml ps
-sudo docker network inspect todoapp_network
+docker-machine create \
+    -d virtualbox \
+    cluster-store
+
+docker $(docker-machine config cluster-store) run -d \
+    -p "8500:8500" \
+    -h "consul" \
+    progrium/consul -server -bootstrap -ui-dir /ui
 ```
 
-Ausgabe des Ports der ToDo Anwendung
+## Erstellung des Swarm-Clusters mit Docker-Machine
+
+Erstellung des Swarm Masters
 
 ```bash
-sudo docker-compose -f docker-compose_v2.yml port todoApp 3000
-0.0.0.0:32768
+docker-machine create \
+    --driver virtualbox \
+    --swarm \
+    --swarm-master \
+    --swarm-discovery="consul://$(docker-machine ip cluster-store):8500" \
+    --engine-opt="cluster-store=consul://$(docker-machine ip cluster-store):8500" \
+    --engine-opt="cluster-advertise=eth1:0" \
+    swarm-master
 ```
 
-Wir können diesen Port einfach verwenden und in einem beliebigen Browser localhost:32768 eingeben.
-
-Jetzt können wir einen neuen Redis Slave Container erstellen
+Erstellung von zwei Swarm-Nodes
 
 ```bash
-sudo docker-compose -f docker-compose_v2.yml scale redis-slave=2
+docker-machine create \
+    --driver virtualbox \
+    --swarm \
+    --swarm-discovery="consul://$(docker-machine ip cluster-store):8500" \
+    --engine-opt="cluster-store=consul://$(docker-machine ip cluster-store):8500" \
+    --engine-opt="cluster-advertise=eth1:0" \
+    swarm-node-00
+
+docker-machine create \
+    --driver virtualbox \
+    --swarm \
+    --swarm-discovery="consul://$(docker-machine ip cluster-store):8500" \
+    --engine-opt="cluster-store=consul://$(docker-machine ip cluster-store):8500" \
+    --engine-opt="cluster-advertise=eth1:0" \
+    swarm-node-01
 ```
 
-Nun können wir in einem neuen Terminalfenster, mithilfe von watch, alle 500ms von dem frontend Container eine DNS Anfrage auf den Redis Slave ausführen.
+Mit diesem Befehl überprüfen wir die Erstellung des Clusters
 
 ```bash
-watch -n 0.5 sudo docker exec $(sudo docker ps -f name=1_docker_tools_todoApp_1 -q) getent hosts  redis-slave
+eval $(docker-machine env --swarm swarm-master)
+docker info
 ```
 
-Im nächsten Schritt können wir den ersten Redis Slave beenden. Wenn wir nun wieder in das Terminalfenster der DNS Abfrage schauen sehen wir die IP-Addresse des Redis Slave 2.
+Nun erstellen wir abschließend noch ein Overlay Netzwerk, so dass die Hosts auch miteinander kommunizieren können.
 
 ```bash
-sudo docker kill $(sudo docker ps -f name=1_docker_tools_redis-slave_1 -q)
+docker network create -d overlay todoapp_network
+
+$ docker network ls
+NETWORK ID          NAME                   DRIVER              SCOPE
+471c06f5c6a9        swarm-master/bridge    bridge              local
+2d2e137cf49e        swarm-master/host      host                local
+79c3481145a2        swarm-master/none      null                local
+5aa3e1ecc41e        swarm-node-00/bridge   bridge              local
+a191e965b3d3        swarm-node-00/host     host                local
+f49d2627afb1        swarm-node-00/none     null                local
+d76ee4cc9c54        swarm-node-01/bridge   bridge              local
+70e4c90dbf05        swarm-node-01/host     host                local
+22ee9ac4c41b        swarm-node-01/none     null                local
+fb49711a7996        todoapp_network        overlay             global
+
+docker $(docker-machine config swarm-master) network ls
+```
+
+Dank des gemeinsamen Key-Value Store Consul ist das Netzwerk auf allen Nodes des Swarm Clusters verfügbar
+
+```bash
+docker $(docker-machine config swarm-node-00) network ls
+docker $(docker-machine config swarm-node-01) network ls
+```
+
+## Beispiel
+
+Die Erstellung des Redis-Master Containers
+
+```bash
+docker run -d -p 6379:6379 --name=redis-master --network=todoapp_network johscheuer/redis-master:v2
+```
+
+Nun können wir den Redis-Slave erstellen
+
+```bash
+docker run -d -p 6379:6379 --name=redis-slave --network=todoapp_network johscheuer/redis-slave:v2
+```
+
+Bei dem Versuch einen dritten Redis-Slave zu starten erhalten wir folgenden Fehler: "docker: Error response from daemon: Conflict: The name redis-slave is already assigned. You have to delete (or rename) that container to be able to assign redis-slave to a container again.. See 'docker run --help'.". Welcher uns mitteilt, dass in dem Swarm-Cluster schon ein Container mit dem Namen `redis-slave` gibt.
+
+Abschließend kann die bis zu drei mal ToDo-App gestartet werden.
+
+```bash
+docker run -d -p 3000:3000 --network=todoapp_network johscheuer/todo-app-web:v2
+```
+
+Nun kann auch die ToDo-App zugegriffen werden, hierfür muss der Anwender zu erst schauen auf welchem Knoten die Todo-App läuft und kann danach einfach über die IP des Knoten und den Port `3000` auf die Applikation zugreifen. In dem folgenden Code Beispiel rufen wir die IP-Adresse des `swarm-master` ab.
+
+```bash
+docker-machine ip swarm-master
+```
+
+## Compse + Swarm + Networking
+
+Wir können nun das Compose Beispiel auch auf dem Swarm Cluster starten. Hierfür entfernen wir die zuvor gestarteten Container.
+
+```bash
+docker rm -f $(docker ps -q)
+```
+
+Nun können wir mit dem gewohnten Docker Compose Commando unsere Anwendung starten
+
+```bash
+docker-compose up -d
+
+docker-compose ps
+
+docker-compose port todoApp 3000
 ```
 
 # Swarm Mode
@@ -210,7 +325,7 @@ eval $(docker-machine env swarm-manager)
 docker node ls
 ```
 
-Nun erstellen wir abschließend noch ein Overlay Netzwerk, so dass die Hosts auch miteinander kommunizieren können.
+Nun erstellen wir abschließend noch ein Overlay Netzwerk, so dass die Container auf den Hosts auch miteinander kommunizieren können.
 
 ```bash
 docker network create -d overlay todoapp_network
@@ -241,14 +356,17 @@ Error response from daemon: rpc error: code = 2 desc = name conflicts with an ex
 Anschließend starten wir noch die ToDo-App:
 
 ```bash
-docker service create --replicas=3 -p 3000:3000 --name=todo-app --network=todoapp_network johscheuer/todo-app-web:v2
+docker service create --replicas=1 -p 3000:3000 --name=todo-app --network=todoapp_network johscheuer/todo-app-web:v2
 ```
 
 Mit den folgenden Befehlen können wir den aktuellen Status der Serivces betrachten:
 
 ```bash
-docker serivce ls
-...
+$ docker service ls
+ID            NAME          REPLICAS  IMAGE                       COMMAND
+39rje3ly9b7g  redis-master  1/1       johscheuer/redis-master:v2
+3ettoyfix71k  todo-app      1/1       johscheuer/todo-app-web:v2
+5mmlc2ilaq85  redis-slave   2/2       johscheuer/redis-slave:v2
 
 docker service ps todo-app
 ```
@@ -265,6 +383,8 @@ Abschließend kann die todo-app noch einfach über den folgenden Befehl skaliert
 docker service scale todo-app=100
 ```
 
-## Compse + Swarm + Networking
+Wird der oben genannte Befehl nun noch einmal ausgeführt, so kann der Anweder sehen, dass die Anfragen auch wirklich auf die Container verteilt werden.
+
+## Compse + Swarm Mode
 
 Aktuell unterstützt der [Swarm Mode Compose nicht](https://github.com/docker/compose/issues/3656) allerdings kann Compose mit Swarm (ohne Swarm Mode) verwendet werden.
