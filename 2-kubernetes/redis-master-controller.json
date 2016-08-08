@@ -22,7 +22,7 @@
             "containers":[
                {
                   "name":"redis-master",
-                  "image":"redis",
+                  "image":"johscheuer/redis-master:v2",
                   "ports":[
                      {
                         "containerPort":6379,

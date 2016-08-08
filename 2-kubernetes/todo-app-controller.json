@@ -22,7 +22,7 @@
             "containers":[
                {
                   "name":"todo-app",
-                  "image":"johscheuer/todo-app-web:v1",
+                  "image":"johscheuer/todo-app-web:v2",
                   "ports":[
                      {
                         "containerPort":3000,

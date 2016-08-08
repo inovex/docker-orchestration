@@ -22,7 +22,7 @@
             "containers":[
                {
                   "name":"slave",
-                  "image":"johscheuer/redis-slave:v1",
+                  "image":"johscheuer/redis-slave:v2",
                   "ports":[
                      {
                         "containerPort":6379,
