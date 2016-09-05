@@ -1,13 +1,20 @@
-todoApp:
-  image: johscheuer/todo-app-web:v1
-  ports:
-   - "3000"
-  net: todoapp_network
-redisSlave:
-  image: johscheuer/redis-slave:v1
-  container_name: redis-slave
-  net: todoapp_network
-redisMaster:
-  image: redis
-  container_name: redis-master
-  net: todoapp_network
+version: "2"
+services:
+  todoApp:
+    image: johscheuer/todo-app-web:v2
+    ports:
+     - "3000"
+    depends_on:
+     - redis-master
+     - redis-slave
+  redis-slave:
+    image: johscheuer/redis-slave:v2
+    depends_on:
+     - redis-master
+  redis-master:
+    image: johscheuer/redis-master:v2
+
+networks:
+  default:
+    external:
+      name: todoapp_network
