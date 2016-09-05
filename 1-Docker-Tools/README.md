@@ -385,6 +385,6 @@ docker service scale todo-app=100
 
 Wird der oben genannte Befehl nun noch einmal ausgeführt, so kann der Anweder sehen, dass die Anfragen auch wirklich auf die Container verteilt werden.
 
-## Compse + Swarm Mode
+## Compose + Swarm Mode
 
 Aktuell unterstützt der [Swarm Mode Compose nicht](https://github.com/docker/compose/issues/3656) allerdings kann Compose mit Swarm (ohne Swarm Mode) verwendet werden.
