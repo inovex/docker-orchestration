@@ -1,13 +1,13 @@
 # Complie the go
 
+Die aktuelle Version der Todo-App kann hier gefunden werden: https://github.com/johscheuer/todo-app-web
+
 ```
-go get github.com/codegangsta/negroni
-go get github.com/gorilla/mux
-go get github.com/xyproto/simpleredis
+go get -u github.com/inovex/docker-orchestration/container-src/web-frontend
 # On OSX
 CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o bin/todo-app .
 # Create the Docker image
 docker build -t johscheuer/todo-app-web .
 # Tag the image
-docker tag -f johscheuer/todo-app-web johscheuer/todo-app-web:k8s_v2
+docker tag johscheuer/todo-app-web johscheuer/todo-app-web:v2
 ```
