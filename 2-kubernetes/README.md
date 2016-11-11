@@ -131,15 +131,15 @@ Ein Blick in das Kubernetes Dashboard gibt eine gute Übersicht über die laufen
 
 Da wir den Service als Typ "ClusterIP" gestartet haben, können wir diesen über den Kubernetes Master aufrufen. Zu erst ermöglichen wir über einen Redirect, den Zugriff auf den API Server über localhost:
 
-```
-kubectl proxy --api-prefix=/api &
+```bash
+$ kubectl proxy --api-prefix=/api &
 Starting to serve on 127.0.0.1:8001
 ```
 
 Damit man sich davon überzeugen kann, dass der Service die Anfragen auch auf die unterschiedlichen Pods verteilt besitzt die Todo App eine kleine Schnittstelle welche die IP Adresse ausgibt:
 
 ```bash
-watch -n 0.5 curl -s http://127.0.0.1:8001/api/v1/proxy/namespaces/default/services/todo-app/whoami
+$ watch -n 0.5 curl -s http://127.0.0.1:8001/api/v1/proxy/namespaces/default/services/todo-app/whoami
 ```
 
 Der Proxy kann danach mit `pkill kubectl proxy` beendet werden.
