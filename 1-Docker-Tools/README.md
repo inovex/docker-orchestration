@@ -11,7 +11,9 @@
 #### Installation Docker-Compose (Linux)
 
 ```bash
-$ sudo sh -c "curl -L -o /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/1.8.0/docker-compose-`uname -s`-`uname -m` && chmod +x /usr/local/bin/docker-compose"
+$ sudo sh -c "curl -L -o /usr/local/bin/docker-compose \
+              https://github.com/docker/compose/releases/download/1.8.0/docker-compose-`uname -s`-`uname -m` && \
+              chmod +x /usr/local/bin/docker-compose"
 # Test ob docker-compose korrekt installiert wurde
 $ docker-compose version
 ```
@@ -92,7 +94,9 @@ oder
 ## Installation Docker-Machine (Linux)
 
 ```bash
-$ sudo sh -c "curl -L -o /usr/local/bin/docker-machine https://github.com/docker/machine/releases/download/v0.8.0/docker-machine_linux-amd64  && chmod +x /usr/local/bin/docker-machine"
+$ sudo sh -c "curl -L -o /usr/local/bin/docker-machine \
+              https://github.com/docker/machine/releases/download/v0.8.0/docker-machine_linux-amd64  && \
+              chmod +x /usr/local/bin/docker-machine"
 # Test ob docker-machine korrekt installiert wurde
 $ docker-machine version
 ```
@@ -241,7 +245,9 @@ oder
 ## Installation Docker-Machine (Linux)
 
 ```bash
-$ sudo sh -c "curl -L -o /usr/local/bin/docker-machine https://github.com/docker/machine/releases/download/v0.8.0/docker-machine_linux-amd64  && chmod +x /usr/local/bin/docker-machine"
+$ sudo sh -c "curl -L -o /usr/local/bin/docker-machine \
+              https://github.com/docker/machine/releases/download/v0.8.0/docker-machine_linux-amd64  && \
+              chmod +x /usr/local/bin/docker-machine"
 # Test ob docker-machine korrekt installiert wurde
 $ docker-machine version
 ```
